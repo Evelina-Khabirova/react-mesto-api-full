@@ -13,27 +13,26 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import Header from './Header.js';
 import Login from './Login.js';
 import Register from './Register.js';
-//import ProtectedRoute from './ProtectedRoute.js';
-//import InfoTooltip from './InfoTooltip.js'
+import ProtectedRoute from './ProtectedRoute.js';
+import InfoTooltip from './InfoTooltip.js'
 
 function App() {
 
   const api = new Api('https://mesto.nomoreparties.co/v1/cohort-43');
-  const apiAuth = new ApiAuthorization('https://auth.nomoreparties.co/');
+  const apiAuth = new ApiAuthorization('https://auth.nomoreparties.co');
   const [currentUser, setCurrentUser] = React.useState({name: '', about: ''});
   const [cards, setCards] = React.useState([]);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isRegisterPopup, setIsRegisterPopup] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(null);
-  const [selectedCardDelete, setSelectedCardDelete] = React.useState(null);
   const [isSelectedCard, setIsSelectedCard] = React.useState(false);
   const [isDeleteCard, setIsDeleteCard] = React.useState(false);
-  const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isSelectedCard;
+  const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isSelectedCard || isRegisterPopup;
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = React.useState(false);
   const [userInfo, setUserInfo] = React.useState({'_id': '', 'email': ''});
-  const history = useNavigate();
+  const navigate = useNavigate();
   const [statusRegister, setStatusRegistr] = React.useState(null);
 
   React.useEffect(() => {
@@ -51,14 +50,14 @@ function App() {
     })
     .catch((err) => console.log(err));
   }, []);
-/*
+
   function tokenCheck() {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('token');
     if(!jwt) {
       return;
     }
 
-    apiAuth.getEmail(jwt)
+    apiAuth.getToken()
     .then((res) => {
       setUserInfo({
         '_id': res.data['_id'],
@@ -76,10 +75,10 @@ function App() {
 
   React.useEffect(() => {
     if(loggedIn) {
-      history.push('/');
+      navigate('/', {replace: true});;
     }
-  }, [loggedIn, history]);
-*/
+  }, [loggedIn, navigate]);
+
   function handleEscUp(evt) {
     if(evt.key === 'Escape') {
       closeAllPopups();
@@ -104,6 +103,10 @@ function App() {
     setIsEditAvatarPopupOpen(true);
   }
 
+  function handleRegisterClick() {
+    setIsRegisterPopup(true);
+}
+
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
@@ -122,11 +125,7 @@ function App() {
   }
 
   function handleSignOut() {
-    localStorage.removeItem('jwt');
-  }
-
-  function handleConfirmationDelete() {
-    setIsConfirmationPopupOpen(true);
+    localStorage.removeItem('token');
   }
 
   function handleCardLike(card) {
@@ -181,72 +180,77 @@ function App() {
     setIsSelectedCard(false);
     setSelectedCard(null);
     setIsDeleteCard(false);
+    setIsRegisterPopup(false);
   }
 
-/*
-<Route exact path='/' element={
-          <ProtectedRoute
-          exact
-          loggedIn={loggedIn}
-          path="/"
-          userInfo={userInfo}
-          setLoggedIn={setLoggedIn}
-          handleSignOut={handleSignOut}
-          component={Header}
-        />}></Route>
-*/
 
-/*
-<Route exact path='/' element={
-        <ProtectedRoute
-          loggedIn={loggedIn}
-          path="/"
-          component={Main}
-          openEditAvatar = {handleEditAvatarClick}
-          openEditProfile = {handleEditProfileClick}
-          openAddCard = {handleAddPlaceClick}
-          onCardClick = {handleCardClick}
-          onCardLike = {handleCardLike}
-          onCardDelete = {handleCardDelete}
-          cards={cards}
-          onConfirmationDelete={handleConfirmationDelete}
-        />}>
+  function handleRegisterUser({email, password}) {
+    return apiAuth.registrationUser({email, password})
+      .then((res) => {
+        setStatusRegistr(true);
+        navigate('/signin', {replace: true});
+        handleRegisterClick();
+      })
+      .catch(() => {
+        setStatusRegistr(false);
+        navigate('/signup', {replace: true});
+        handleRegisterClick();
+      });
+  }
 
-        <Route element=
-         {loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />}
-        >
-        </Route>
-
-        </Route>
-        <InfoTooltip 
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          name="ok"
-        />
-*/
+  function handleLoginUser({email, password}) {
+    return apiAuth.authorizationUser({email, password})
+      .then((res) => {
+        setUserInfo({'email': email});
+        setLoggedIn(true);
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div>
-      <Header />
+      <Header 
+        userInfo={userInfo}
+        signOut={handleSignOut}
+        setLoggedIn={setLoggedIn}
+      />
       <Routes>
-        <Route path="/sign-in" element={<Login />}>
+        <Route path='/' exact element={
+          <ProtectedRoute
+            path="/"
+            loggedIn={loggedIn}
+            component={Main}
+            openEditAvatar = {handleEditAvatarClick}
+            openEditProfile = {handleEditProfileClick}
+            openAddCard = {handleAddPlaceClick}
+            onCardClick = {handleCardClick}
+            onCardLike = {handleCardLike}
+            onCardDelete = {handleCardDelete}
+            cards={cards}
+          />
+        }>
         </Route>
-        <Route path="/sign-up" element={<Register />}>
+        <Route path="/signin" element={
+        <Login 
+          logged={handleLoginUser}
+        />}>
         </Route>
-        <Route path="/" exact element={
-          <Main 
-          openEditAvatar = {handleEditAvatarClick}
-          openEditProfile = {handleEditProfileClick}
-          openAddCard = {handleAddPlaceClick}
-          onCardClick = {handleCardClick}
-          onCardLike = {handleCardLike}
-          onCardDelete = {handleCardDelete}
-          cards={cards}
-        />
-        }
-        ></Route>
+        <Route path="/signup" element={
+          <Register 
+            register={handleRegisterUser}
+          />}>
+        </Route>
+         <Route exact path='*' element=
+         {loggedIn ? <Navigate to="/" /> : <Navigate to="/signin" />}
+        >
+        </Route>
       </Routes>
+      <InfoTooltip 
+         open={`${isRegisterPopup ? 'popup__active' : ''}`}
+         close={closeAllPopups}
+         statusRegister={statusRegister}
+      />
         <EditAvatarPopup 
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}

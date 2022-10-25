@@ -1,12 +1,14 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({
-  component: Component, path, ...props
+  component: Component, ...props
 }) => {
+  const checkLogged = () => {
+    return props.loggedIn ? <Component {...props} /> : <Navigate to="/sign-in" />
+  }
   return(
-      () => 
-        props.loggedIn ? <Component path={path} {...props} /> : <Navigate to="/sign-in" />
+      <>{checkLogged()}</>
   );
 }
 

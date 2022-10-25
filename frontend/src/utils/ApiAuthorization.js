@@ -2,6 +2,7 @@ export default class ApiAuthorization {
   constructor(options) {
     this._options = options;
     this._headers = {
+      'Accept': 'application/json',
       "Content-Type": "application/json"
     }
   }
@@ -13,38 +14,47 @@ export default class ApiAuthorization {
     return Promise.reject('Возникла ошибка');
   }
 
-  registrationUser({values}) {
-    return fetch(`${this._options}/sign-up`, {
+  registrationUser({email, password}) {
+    return fetch(`${this._options}/signup`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        'email': values.login,
-        'password': values.password
+        "password": password,
+        "email": email
       })
     })
-    .then(res => this._handleErrors(res));
+    .then((res) => {
+      return this._handleErrors(res);
+    });
   }
 
-  authorizationUser({values}) {
-    return fetch(`${this._options}/sign-in`, {
+  authorizationUser({email, password}) {
+    return fetch(`${this._options}/signin`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        'email': values.login,
-        'password': values.password
+        'password': password,
+        'email': email
       })
     })
-    .then(res => this._checkResponse(res));
+    .then((res) => {
+      return this._handleErrors(res);
+    })
+    .then((data) => {
+      localStorage.setItem('token', data.token)
+    });
   }
 
-  getEmail(token) {
-    return fetch(`${this._options}/user/me`, {
+  getToken() {
+    return fetch(`${this._options}/users/me`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-    .then(res => this._handleErrors(res));
+    .then((res) => {
+      return this._handleErrors(res);
+    });
   }
 }

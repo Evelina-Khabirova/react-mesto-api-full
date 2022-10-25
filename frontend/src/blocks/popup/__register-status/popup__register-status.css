@@ -1,0 +1,4 @@
+.popup__register-status {
+  display: flex;
+  flex-direction: column;
+}
