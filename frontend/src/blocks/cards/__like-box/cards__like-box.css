@@ -1,0 +1,7 @@
+.cards__like-box {
+  width: 22px;
+  height: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

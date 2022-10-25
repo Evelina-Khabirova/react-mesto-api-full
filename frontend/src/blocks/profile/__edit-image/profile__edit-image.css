@@ -1,0 +1,10 @@
+.profile__edit-image {
+  background-image: url(../../../images/editAvatar.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1;
+}
+
+.profile__edit-image:hover {
+  opacity: 0.8;
+}
