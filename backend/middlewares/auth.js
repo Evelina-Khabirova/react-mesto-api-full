@@ -4,7 +4,7 @@ const UnauthorizedError = require('../error/UnauthorizedError');
 
 module.exports.auth = (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    const token = req.headers.authorization.replace('Bearer ', '');
     if (!token) {
       return next(new UnauthorizedError('Отсутствует токен'));
     }

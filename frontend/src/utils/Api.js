@@ -27,7 +27,7 @@ export default class Api {
   identificationProfile() {
     return fetch(`${this._options}/users/me`, {
       method: 'GET',
-      headers: this._headers
+      headers: this._headers,
     })
     .then((res) => {
       return this._handleErrors(res);

@@ -41,6 +41,7 @@ export default class ApiAuthorization {
       return this._handleErrors(res);
     })
     .then((data) => {
+      console.log(data);
       localStorage.setItem('token', data.token)
     });
   }
@@ -51,7 +52,8 @@ export default class ApiAuthorization {
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      credentials: "include",
     })
     .then((res) => {
       return this._handleErrors(res);

@@ -18,9 +18,9 @@ import InfoTooltip from './InfoTooltip.js'
 
 function App() {
 
-  const api = new Api('https://mesto.nomoreparties.co/v1/cohort-43');
-  const apiAuth = new ApiAuthorization('https://auth.nomoreparties.co');
-  const [currentUser, setCurrentUser] = React.useState({name: '', about: ''});
+  const api = new Api('http://localhost:5555');
+  const apiAuth = new ApiAuthorization('http://localhost:5555');
+  const [currentUser, setCurrentUser] = React.useState({name: '', about: '', email: '', avatar: ''});
   const [cards, setCards] = React.useState([]);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -59,10 +59,7 @@ function App() {
 
     apiAuth.getToken()
     .then((res) => {
-      setUserInfo({
-        '_id': res.data['_id'],
-        'email': res.data['email']
-      });
+      setCurrentUser(res.data);
       setLoggedIn(true);
     })
     .catch((err) => console.log(err));
@@ -167,6 +164,7 @@ function App() {
   function handleAddPlaceSubmit({name, link}) {
     api.addCard(name, link)
     .then((newCard) => {
+      console.log(newCard);
       setCards([newCard, ...cards]);
       closeAllPopups();
     })
@@ -201,7 +199,7 @@ function App() {
   function handleLoginUser({email, password}) {
     return apiAuth.authorizationUser({email, password})
       .then((res) => {
-        setUserInfo({'email': email});
+        setCurrentUser({'email': email});
         setLoggedIn(true);
       })
       .catch((err) => console.log(err));
@@ -211,7 +209,7 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div>
       <Header 
-        userInfo={userInfo}
+        userInfo={currentUser}
         signOut={handleSignOut}
         setLoggedIn={setLoggedIn}
       />
