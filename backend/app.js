@@ -1,4 +1,4 @@
-require.('dotenv').config;
+require('dotenv').config();
 
 const {
   NODE_ENV,
@@ -19,6 +19,7 @@ const { validateLogin, validateCreateProfile } = require('./middlewares/validati
 const errorHandler = require('./middlewares/errorHandler');
 const { cors } = require('./middlewares/cors');
 const NotFoundError = require('./error/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors);
+app.use(requestLogger);
 app.post('/signin', validateLogin, loginProfile);
 app.post('/signup', validateCreateProfile, registerProfile);
 app.use(auth);
@@ -36,6 +38,7 @@ app.use('*', (req, res, next) => {
   next(new NotFoundError('Сервер не найден'));
   next();
 });
+app.use(errorLogger);
 app.use(errorHandler);
 
 function connect() {
