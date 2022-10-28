@@ -17,7 +17,7 @@ const { loginProfile, registerProfile } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { validateLogin, validateCreateProfile } = require('./middlewares/validations');
 const errorHandler = require('./middlewares/errorHandler');
-const { cors } = require('./middlewares/cors');
+const { handleCors } = require('./middlewares/handleCors');
 const NotFoundError = require('./error/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -26,7 +26,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors);
+app.use(handleCors);
 app.use(requestLogger);
 app.post('/signin', validateLogin, loginProfile);
 app.post('/signup', validateCreateProfile, registerProfile);
