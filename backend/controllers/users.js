@@ -1,3 +1,11 @@
+require('dotenv').config;
+
+const {
+  NODE_ENV,
+  JWT_SECRET,
+  SALT_ROUNDS,
+} = process.env;
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Users = require('../models/users');
@@ -50,17 +58,22 @@ module.exports.getProfileId = (req, res, next) => {
 };
 
 module.exports.registerProfile = (req, res, next) => {
-  const { password } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hash) => {
-      Users.create({ ...req.body, password: hash })
-        .then((user) => res.send({
-          email: user.email,
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          _id: user._id,
-        }))
+  const {
+    name,
+    email,
+    about,
+    avatar,
+  } = req.body;
+  bcrypt.hash(req.body.password, NODE_ENV === 'production' ? Number(SALT_ROUNDS) : 10)
+    .then((password) => {
+      Users.create({
+        name,
+        email,
+        password,
+        about,
+        avatar,
+      })
+        .then((user) => res.send(user.toJSON()))
         .catch((err) => {
           if (err.code === 11000) {
             return next(new ConflictError('Пользователь с таким email уже существует'));
@@ -87,7 +100,7 @@ module.exports.loginProfile = (req, res, next) => {
         if (!isValidPassword) {
           return next(new UnauthorizedError('Неверный пароль'));
         }
-        const token = jwt.sign({ _id: users._id }, 'some-secret-key', { expiresIn: '7d' });
+        const token = jwt.sign({ _id: users._id }, (NODE_ENV === 'production') ? JWT_SECRET : 'secret', { expiresIn: '7d' });
         return res.cookie('token', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,

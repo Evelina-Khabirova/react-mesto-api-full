@@ -1,3 +1,11 @@
+require.('dotenv').config;
+
+const {
+  NODE_ENV,
+  PORT,
+  MONGO_URL,
+} = process.env;
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -12,7 +20,6 @@ const errorHandler = require('./middlewares/errorHandler');
 const { cors } = require('./middlewares/cors');
 const NotFoundError = require('./error/NotFoundError');
 
-const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
@@ -32,11 +39,11 @@ app.use('*', (req, res, next) => {
 app.use(errorHandler);
 
 function connect() {
-  mongoose.connect('mongodb://localhost:27017/mestodb', {
+  mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://localhost:27017/mestodb', {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
-  app.listen(PORT);
+  app.listen(NODE_ENV === 'production' ? PORT : 3000);
 }
 
 connect();
