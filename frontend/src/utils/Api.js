@@ -2,8 +2,7 @@ export default class Api {
   constructor(options) {
     this._options = options;
     this._headers = {
-      'Content-type': 'application/json',
-      authorization: 'f14481c5-e77c-456f-a863-20543b32692f'
+      'Content-type': 'application/json'
     }
   }
 
@@ -14,7 +13,7 @@ export default class Api {
     return Promise.reject('Возникла ошибка');
   }
 
-  getInitialCards() {
+  getCardsInfo() {
     return fetch(`${this._options}/cards`, {
       method: 'GET',
       credentials: "include", 
@@ -25,7 +24,7 @@ export default class Api {
       });
   }
 
-  identificationProfile() {
+  getUserInfo() {
     return fetch(`${this._options}/users/me`, {
       method: 'GET',
       credentials: "include", 

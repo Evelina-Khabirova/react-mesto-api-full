@@ -17,9 +17,9 @@ import ProtectedRoute from './ProtectedRoute.js';
 import InfoTooltip from './InfoTooltip.js'
 
 function App() {
-
-  const api = new Api('http://api.mesto.evelina.nomoredomains.icu');
-  const apiAuth = new ApiAuthorization('http://api.mesto.evelina.nomoredomains.icu');
+  
+  const api = new Api('http://localhost:5555');
+  const apiAuth = new ApiAuthorization('http://localhost:5555');
   const [currentUser, setCurrentUser] = React.useState({name: '', about: '', email: '', avatar: ''});
   const [cards, setCards] = React.useState([]);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -36,20 +36,42 @@ function App() {
   const [statusRegister, setStatusRegistr] = React.useState(null);
 
   React.useEffect(() => {
-    api.identificationProfile()
-    .then((res) => {
-      setCurrentUser(res);
-    })
-    .catch((err) => console.log(err))
-  }, []);
+    if (loggedIn) {
+      api.getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => console.log(err))
+      }
+  }, [loggedIn]);
 
   React.useEffect(() => {
-    api.getInitialCards()
+    if (loggedIn) {
+      api.getCardsInfo()
+      .then((res) => {
+        setCards(res);
+      })
+      .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('loggedIn') === 'true') {
+      getLoginData();
+    }
+  }, [loggedIn]);
+
+  function getLoginData() {
+    apiAuth.getToken()
     .then((res) => {
-      setCards(res);
+      setUserInfo({
+        '_id': res._id,
+        'email': res.email,
+      });
+      setLoggedIn(true);
     })
-    .catch((err) => console.log(err));
-  }, []);
+    .catch((err) => console.log(err))
+  }
 
   function tokenCheck() {
     const jwt = localStorage.getItem('token');
@@ -200,7 +222,10 @@ function App() {
     return apiAuth.authorizationUser({email, password})
       .then((res) => {
         setCurrentUser({'email': email});
-        setLoggedIn(true);
+        setLoggedIn(() => {
+          localStorage.setItem('loggedIn', true)
+          return true;
+        });
       })
       .catch((err) => console.log(err));
   }

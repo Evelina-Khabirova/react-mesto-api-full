@@ -26,8 +26,8 @@
   },
   "scripts": {
     "lint": "npx eslint .",
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "cross-env PORT=5555 node app.js",
+    "dev": "cross-env PORT=5555 nodemon app.js"
   },
   "repository": {
     "type": "git",

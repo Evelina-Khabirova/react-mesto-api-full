@@ -101,10 +101,7 @@ module.exports.loginProfile = (req, res, next) => {
           return next(new UnauthorizedError('Неверный пароль'));
         }
         const token = jwt.sign({ _id: users._id }, (NODE_ENV === 'production') ? JWT_SECRET : 'secret', { expiresIn: '7d' });
-        return res.cookie('token', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-        }).send({ token }).end();
+        return res.send({ token }).end();
       });
     })
     .catch(() => {

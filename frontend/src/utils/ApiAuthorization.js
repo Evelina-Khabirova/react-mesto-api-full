@@ -2,7 +2,6 @@ export default class ApiAuthorization {
   constructor(options) {
     this._options = options;
     this._headers = {
-      'Accept': 'application/json',
       "Content-Type": "application/json"
     }
   }
@@ -43,7 +42,6 @@ export default class ApiAuthorization {
       return this._handleErrors(res);
     })
     .then((data) => {
-      console.log(data);
       localStorage.setItem('token', data.token)
     });
   }
@@ -61,4 +59,5 @@ export default class ApiAuthorization {
       return this._handleErrors(res);
     });
   }
+
 }
