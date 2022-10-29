@@ -18,8 +18,8 @@ import InfoTooltip from './InfoTooltip.js'
 
 function App() {
 
-  const api = new Api('https://api.mesto.evelina.nomoredomains.icu');
-  const apiAuth = new ApiAuthorization('https://api.mesto.evelina.nomoredomains.icu');
+  const api = new Api('http://api.mesto.evelina.nomoredomains.icu');
+  const apiAuth = new ApiAuthorization('http://api.mesto.evelina.nomoredomains.icu');
   const [currentUser, setCurrentUser] = React.useState({name: '', about: '', email: '', avatar: ''});
   const [cards, setCards] = React.useState([]);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
