@@ -17,7 +17,7 @@ export default class ApiAuthorization {
   registrationUser({email, password}) {
     return fetch(`${this._options}/signup`, {
       method: 'POST',
-      credentials: 'include',
+      credentials: "include", 
       headers: this._headers,
       body: JSON.stringify({
         "password": password,
@@ -32,7 +32,7 @@ export default class ApiAuthorization {
   authorizationUser({email, password}) {
     return fetch(`${this._options}/signin`, {
       method: 'POST',
-      credentials: 'include',
+      credentials: "include", 
       headers: this._headers,
       body: JSON.stringify({
         'password': password,
@@ -51,7 +51,7 @@ export default class ApiAuthorization {
   getToken() {
     return fetch(`${this._options}/users/me`, {
       method: 'GET',
-      credentials: 'include',
+      credentials: "include", 
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`

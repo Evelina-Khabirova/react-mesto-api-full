@@ -17,7 +17,7 @@ const { loginProfile, registerProfile } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { validateLogin, validateCreateProfile } = require('./middlewares/validations');
 const errorHandler = require('./middlewares/errorHandler');
-const { handleCors } = require('./middlewares/handleCors');
+const handleCors = require('./middlewares/handleCors');
 const NotFoundError = require('./error/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
