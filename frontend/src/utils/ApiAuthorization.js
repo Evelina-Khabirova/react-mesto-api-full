@@ -2,7 +2,6 @@ export default class ApiAuthorization {
   constructor(options) {
     this._options = options;
     this._headers = {
-      credentials: 'include',
       'Accept': 'application/json',
       "Content-Type": "application/json"
     }
@@ -18,6 +17,7 @@ export default class ApiAuthorization {
   registrationUser({email, password}) {
     return fetch(`${this._options}/signup`, {
       method: 'POST',
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         "password": password,
@@ -32,6 +32,7 @@ export default class ApiAuthorization {
   authorizationUser({email, password}) {
     return fetch(`${this._options}/signin`, {
       method: 'POST',
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         'password': password,
@@ -50,11 +51,11 @@ export default class ApiAuthorization {
   getToken() {
     return fetch(`${this._options}/users/me`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-      credentials: "include",
     })
     .then((res) => {
       return this._handleErrors(res);

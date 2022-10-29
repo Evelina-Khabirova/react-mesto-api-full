@@ -2,7 +2,6 @@ export default class Api {
   constructor(options) {
     this._options = options;
     this._headers = {
-      credentials: 'include',
       'Content-type': 'application/json',
       authorization: 'f14481c5-e77c-456f-a863-20543b32692f'
     }
@@ -18,6 +17,7 @@ export default class Api {
   getInitialCards() {
     return fetch(`${this._options}/cards`, {
       method: 'GET',
+      credentials: 'include',
       headers: this._headers
     })
       .then((res) => {
@@ -28,6 +28,7 @@ export default class Api {
   identificationProfile() {
     return fetch(`${this._options}/users/me`, {
       method: 'GET',
+      credentials: 'include',
       headers: this._headers,
     })
     .then((res) => {
@@ -38,6 +39,7 @@ export default class Api {
   editAvatar(profileAvatar) {
     return fetch(`${this._options}/users/me/avatar`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         avatar: profileAvatar
@@ -51,6 +53,7 @@ export default class Api {
   editProfile(fullnameProfile, aboutProfile) {
     return fetch(`${this._options}/users/me`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         name: fullnameProfile,
@@ -65,6 +68,7 @@ export default class Api {
   changeLikeCardStatus(cardId, isLiked) {
     return fetch(`${this._options}/cards/${cardId}/likes`, {
       method: `${isLiked ? 'DELETE' : 'PUT'}`,
+      credentials: 'include',
       headers: this._headers
     })
     .then((res) => {
@@ -75,6 +79,7 @@ export default class Api {
   addCard(cardName, cardLink) {
     return fetch(`${this._options}/cards`, {
       method: 'POST',
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         name: cardName,
@@ -89,6 +94,7 @@ export default class Api {
   deleteCard(cardId) {
     return fetch(`${this._options}/cards/${cardId}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: this._headers,
     })
       .then((res) => {
