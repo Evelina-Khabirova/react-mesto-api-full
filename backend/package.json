@@ -26,8 +26,8 @@
   },
   "scripts": {
     "lint": "npx eslint .",
-    "start": "cross-env http://api.mesto.evelina.nomoredomains.icu node app.js",
-    "dev": "cross-env http://api.mesto.evelina.nomoredomains.icu nodemon app.js"
+    "start": "cross-env https://api.mesto.evelina.nomoredomains.icu node app.js",
+    "dev": "cross-env https://api.mesto.evelina.nomoredomains.icu nodemon app.js"
   },
   "repository": {
     "type": "git",
