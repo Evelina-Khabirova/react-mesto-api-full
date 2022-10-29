@@ -2,7 +2,7 @@ export default class ApiAuthorization {
   constructor(options) {
     this._options = options;
     this._headers = {
-      credential: 'include',
+      credentials: 'include',
       'Accept': 'application/json',
       "Content-Type": "application/json"
     }
