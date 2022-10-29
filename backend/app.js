@@ -9,6 +9,7 @@ const {
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const routerUser = require('./routers/users');
@@ -17,16 +18,19 @@ const { loginProfile, registerProfile } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { validateLogin, validateCreateProfile } = require('./middlewares/validations');
 const errorHandler = require('./middlewares/errorHandler');
-const { handleCors } = require('./middlewares/handleCors');
+//const { handleCors } = require('./middlewares/handleCors');
 const NotFoundError = require('./error/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
+const allowedCors = ['https://praktikum.tk', 'http://praktikum.th', 'http://localhost:7777', 'http://api.mesto.evelina.nomoredomains.icu', 'https://api.mesto.evelina.nomoredomains.icu', 'http://mesto.evelina-khabirova.nomoredomains.icu', 'https://mesto.evelina-khabirova.nomoredomains.icu', 'http://127.0.0.1:7777', 'http://localhost:5555', 'http://127.0.0.1:5555'];
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(handleCors);
+app.use(cors({origin: allowedCors}));
+//app.use(handleCors);
 app.use(requestLogger);
 app.post('/signin', validateLogin, loginProfile);
 app.post('/signup', validateCreateProfile, registerProfile);
