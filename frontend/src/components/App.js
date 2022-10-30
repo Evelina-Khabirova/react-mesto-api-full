@@ -18,6 +18,14 @@ import InfoTooltip from './InfoTooltip.js'
 
 function App() {
   
+  function handleToken() {
+    const jwt = localStorage.getItem('token');
+    if(!jwt) {
+      return;
+    }
+    return jwt;
+  }
+
   const api = new Api('http://api.mesto.evelina.nomoredomains.icu');
   const apiAuth = new ApiAuthorization('http://api.mesto.evelina.nomoredomains.icu');
   const [currentUser, setCurrentUser] = React.useState({name: '', about: '', email: '', avatar: ''});
@@ -74,10 +82,7 @@ function App() {
   }
 
   function tokenCheck() {
-    const jwt = localStorage.getItem('token');
-    if(!jwt) {
-      return;
-    }
+    handleToken();
 
     apiAuth.getToken()
     .then((res) => {
