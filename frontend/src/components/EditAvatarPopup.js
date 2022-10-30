@@ -20,7 +20,7 @@ function EditAvatarPopup({
       avatar: avatar.current.value
     });
   }
-  console.log(avatar);
+
   return(
     <PopupWithForm 
       open={`${isOpen ? 'popup__active' : ''}`}

@@ -181,7 +181,7 @@ function App() {
   }  
 
   function handleUpdateAvatar({avatar}) {
-    console.log(avatar);
+    console.log(avatar.data);
     api.editAvatar(avatar.data)
     .then((res) => {
       console.log(res);
