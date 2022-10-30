@@ -7,7 +7,7 @@ function EditAvatarPopup({
   onUpdateAvatar
 }){
   const avatar = React.useRef();
-  
+
   React.useEffect(() => {
     if(!isOpen) {
       avatar.current.value = '';
@@ -20,7 +20,7 @@ function EditAvatarPopup({
       avatar: avatar.current.value
     });
   }
-
+  console.log(avatar);
   return(
     <PopupWithForm 
       open={`${isOpen ? 'popup__active' : ''}`}
