@@ -31,12 +31,12 @@ app.post('/signup', validateCreateProfile, registerProfile);
 app.use(auth);
 app.use('/', routerUser);
 app.use('/', routerCard);
-app.use(errors());
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Сервер не найден'));
   next();
 });
 app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
 
 function connect() {
