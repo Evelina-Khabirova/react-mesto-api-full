@@ -158,7 +158,6 @@ function App() {
     const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, isLiked)
     .then((newCard) => {
-      console.log('newCard', newCard.data);
       setCards((state) => state.map((c) => c._id === card._id ? newCard.data : c));
     })
     .catch((err) => console.log(err));
@@ -176,7 +175,6 @@ function App() {
       api.editProfile(name, about)
       .then((res) => {
         setCurrentUser(res);
-        console.log(res);
         closeAllPopups();
       })
       .catch((err) => console.log(err))
