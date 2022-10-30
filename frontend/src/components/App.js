@@ -181,10 +181,8 @@ function App() {
   }  
 
   function handleUpdateAvatar({avatar}) {
-    console.log(avatar);
     api.editAvatar(avatar)
     .then((res) => {
-      console.log(res.data);
       setCurrentUser(res.data);
       closeAllPopups();
     })
