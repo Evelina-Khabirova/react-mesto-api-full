@@ -182,7 +182,7 @@ function App() {
 
   function handleUpdateAvatar({avatar}) {
     console.log(avatar);
-    api.editAvatar(avatar)
+    api.editAvatar(avatar.data)
     .then((res) => {
       console.log(res);
       setCurrentUser(res);
