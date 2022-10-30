@@ -59,5 +59,4 @@ export default class ApiAuthorization {
       return this._handleErrors(res);
     });
   }
-
 }

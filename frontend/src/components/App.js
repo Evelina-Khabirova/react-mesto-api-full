@@ -26,8 +26,10 @@ function App() {
     return jwt;
   }
 
-  const api = new Api('http://api.mesto.evelina.nomoredomains.icu');
-  const apiAuth = new ApiAuthorization('http://api.mesto.evelina.nomoredomains.icu');
+  const token = handleToken();
+
+  const api = new Api('https://api.mesto.evelina.nomoredomains.icu', token);
+  const apiAuth = new ApiAuthorization('https://api.mesto.evelina.nomoredomains.icu');
   const [currentUser, setCurrentUser] = React.useState({name: '', about: '', email: '', avatar: ''});
   const [cards, setCards] = React.useState([]);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -47,7 +49,7 @@ function App() {
     if (loggedIn) {
       api.getUserInfo()
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
       })
       .catch((err) => console.log(err))
       }
@@ -57,7 +59,7 @@ function App() {
     if (loggedIn) {
       api.getCardsInfo()
       .then((res) => {
-        setCards(res);
+        setCards(res.data);
       })
       .catch((err) => console.log(err));
     }
@@ -153,11 +155,11 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    
+    const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, isLiked)
     .then((newCard) => {
-      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+      console.log('newCard', newCard.data);
+      setCards((state) => state.map((c) => c._id === card._id ? newCard.data : c));
     })
     .catch((err) => console.log(err));
   }
@@ -174,6 +176,7 @@ function App() {
       api.editProfile(name, about)
       .then((res) => {
         setCurrentUser(res);
+        console.log(res);
         closeAllPopups();
       })
       .catch((err) => console.log(err))
@@ -191,8 +194,7 @@ function App() {
   function handleAddPlaceSubmit({name, link}) {
     api.addCard(name, link)
     .then((newCard) => {
-      console.log(newCard);
-      setCards([newCard, ...cards]);
+      setCards([newCard.data, ...cards]);
       closeAllPopups();
     })
     .catch((err) => console.log(err))

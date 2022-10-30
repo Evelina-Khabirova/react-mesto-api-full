@@ -1,9 +1,10 @@
 export default class Api {
-  constructor(options) {
+  constructor(options, token) {
     this._options = options;
     this._headers = {
-      'Content-type': 'application/json'
-    }
+      'Content-type': 'application/json',
+      authorization: token
+    };
   }
 
   _handleErrors(res) {
@@ -28,7 +29,7 @@ export default class Api {
     return fetch(`${this._options}/users/me`, {
       method: 'GET',
       credentials: "include", 
-      headers: this._headers,
+      headers: this._headers
     })
     .then((res) => {
       return this._handleErrors(res);
@@ -68,7 +69,7 @@ export default class Api {
     return fetch(`${this._options}/cards/${cardId}/likes`, {
       method: `${isLiked ? 'DELETE' : 'PUT'}`,
       credentials: "include", 
-      headers: this._headers
+      headers: this._headers,
     })
     .then((res) => {
       return this._handleErrors(res);
