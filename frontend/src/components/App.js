@@ -181,11 +181,11 @@ function App() {
   }  
 
   function handleUpdateAvatar({avatar}) {
-    console.log(avatar.data);
-    api.editAvatar(avatar.data)
+    console.log(avatar);
+    api.editAvatar(avatar)
     .then((res) => {
-      console.log(res);
-      setCurrentUser(res);
+      console.log(res.data);
+      setCurrentUser(res.data);
       closeAllPopups();
     })
     .catch((err) => console.log(err))
